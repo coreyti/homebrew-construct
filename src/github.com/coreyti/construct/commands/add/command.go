@@ -3,6 +3,7 @@ package add
 import (
 	"fmt"
 	"os"
+	"strings"
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -32,6 +33,14 @@ func NewCommand(o *Options) *cobra.Command {
 				fmt.Printf("Writing config; error: %s", err)
 				os.Exit(1)
 			}
+
+			// TODO: move to a separate command
+			path := strings.Join([]string{o.cache, name}, "/")
+			runner := NewRunner(path, repo)
+			runner.Run()
+
+			// TODO: move to a separate command
+			runner.TmpInstall()
 		},
 	}
 
