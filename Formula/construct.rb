@@ -1,12 +1,12 @@
 require 'yaml'
 
 class Construct < Formula
-  VERSION = '0.1.1'
+  VERSION = '0.1.2'
 
   desc     "Base functionality for Construct"
   homepage "https://github.com/coreyti/homebrew-construct/"
   url      "https://raw.githubusercontent.com/coreyti/homebrew-construct/master/Package/construct-#{VERSION}.tgz"
-  sha256   "f35248d789b2ff27b7fec026dff4292e582d14245a9f21438c5607fc806d0dc0"
+  sha256   "8cbf3cc087aa4a118f19866864ec724e2e9029fb4561d258ebaaf5d8f8f8c440"
 
   def install
     bin.install "bin/construct"
