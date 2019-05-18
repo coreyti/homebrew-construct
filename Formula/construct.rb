@@ -1,7 +1,7 @@
 require 'yaml'
 
 class Construct < Formula
-  VERSION = '0.0.0'
+  VERSION = '0.1.0'
 
   desc     "Base functionality for Construct"
   homepage "https://github.com/coreyti/homebrew-construct/"
