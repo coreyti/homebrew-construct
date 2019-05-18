@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+readonly workspace="$( cd "$( dirname "${BASH_SOURCE[0]}" )/.." && pwd )"
+readonly content="${workspace}/Content"
+readonly package="${workspace}/Package"
+
+echo "Building construct..."
+
+env GOOS=darwin GOARCH=amd64 \
+go build -o ${workspace}/Content/bin/construct github.com/coreyti/construct
+
+echo "Packaging construct..."
+
+pushd "${content}" > /dev/null
+  version="$(cat VERSION)"
+  tarball="${package}/construct-${version}.tgz"
+
+  rm -rf ${tarball}
+  tar -zcf ${tarball} .
+  shasum -a 256 ${tarball}
+popd > /dev/null
