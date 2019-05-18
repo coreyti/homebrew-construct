@@ -1,0 +1,90 @@
+#!/usr/bin/env bash
+
+set -eu
+set -o nounset
+set -o pipefail
+
+# Bootstrap `construct`...
+# curl -sSL ${BOOTSTRAP_URL}/bootstrap | bash -s
+
+# env
+# ------------------------------------------------------------------------------
+: ${BOOTSTRAP_URL:="https://raw.githubusercontent.com/coreyti/homebrew-construct/master"}
+: ${HOMEBREW_PATH:="/usr/local"}
+: ${HOMEBREW_USER:="$(whoami)"}
+
+# item
+# ------------------------------------------------------------------------------
+function item::label() {
+  message=$1
+  printf "[construct] %-50s ... " "$message"
+}
+
+function item::check() {
+  cmd=$1
+
+  if $($1 &> /dev/null) ; then
+    echo 'skipping'
+    true
+  else
+    echo 'building'
+    false
+  fi
+}
+
+# bash
+# ------------------------------------------------------------------------------
+function bash::line() {
+  local line="$1"
+
+  $(grep "${line}" ${HOME}/.bashrc &> /dev/null) \
+    || echo "${line}" >> ${HOME}/.bashrc
+}
+
+# brew
+# ------------------------------------------------------------------------------
+function brew::prepare() {
+  function build() {
+    local url='https://raw.githubusercontent.com/Homebrew/install/master/install'
+
+    if [ -d "${HOMEBREW_PATH}" ] ; then
+      if ! [ -r "${HOMEBREW_PATH}" ] ; then
+        sudo chown -R "${HOMEBREW_USER}:admin" ${HOMEBREW_PATH}
+      fi
+    else
+      sudo mkdir ${HOMEBREW_PATH}
+      sudo chflags norestricted ${HOMEBREW_PATH}
+      sudo chown -R "${HOMEBREW_USER}:admin" ${HOMEBREW_PATH}
+    fi
+
+    curl -fsSL ${url} | ruby
+    bash::line 'export PATH=/usr/local/bin:$PATH'
+  }
+
+  item::label 'brew::prepare'
+  item::check 'type brew' || build
+}
+
+function brew::execute() {
+  function build() {
+    mkdir -p ${HOME}/.construct
+    bundle=${HOME}/.construct/Brewfile
+    curl -sSL ${BOOTSTRAP_URL}/Brewfile > ${bundle}
+
+    brew update
+    brew bundle -v --file=${bundle}
+  }
+
+  item::label 'brew::execute'
+  item::check '1 == 1' || build
+}
+
+# main
+# ------------------------------------------------------------------------------
+function main() {
+  brew::prepare
+  brew::execute
+  echo
+}
+
+sudo -v && main "$@"
