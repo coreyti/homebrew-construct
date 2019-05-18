@@ -6,7 +6,7 @@ class Construct < Formula
   desc     "Base functionality for Construct"
   homepage "https://github.com/coreyti/homebrew-construct/"
   url      "https://raw.githubusercontent.com/coreyti/homebrew-construct/master/Package/construct-#{VERSION}.tgz"
-  sha256   "91ebc6fa5b2a88459b156f36f582f5310297cd978c16f719ba0531f1346e8ea5"
+  sha256   "fa22ac7ca1936608553288172650ee10abc8afe833ed6c268ffa3edcc98c9451"
 
   def install
     bin.install "bin/construct"
