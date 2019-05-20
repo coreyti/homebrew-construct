@@ -13,6 +13,6 @@ func NewOptions(ui ui.UI) *Options {
 }
 
 func (o *Options) Run() error {
-	o.ui.PrintLinef("construct CLI version: %s", "0.1.2")
+	o.ui.PrintLinef("construct CLI version: %s", "0.1.3")
 	return nil
 }

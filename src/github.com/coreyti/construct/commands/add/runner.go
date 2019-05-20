@@ -41,8 +41,10 @@ func (r *Runner) TmpInstall() {
 		fileArg := strings.Join([]string{"--file", bundle}, "=")
 		arguments := []string{"bundle", "-v", fileArg}
 		execution := exec.Command("brew", arguments...)
+		execution.Stdout = os.Stdout
+		execution.Stderr = os.Stderr
 
-		_, err := execution.CombinedOutput()
+		err := execution.Run()
 		if err != nil {
 			fmt.Printf("Homebrew bundling; error: %s", err)
 			os.Exit(1)
